@@ -39,7 +39,6 @@ function openFullscreen(src) {
     overlay.appendChild(bigImg);
     document.body.appendChild(overlay);
 }
-];
 const galleryImages = [
     "art1.png",
     "art2.png",
