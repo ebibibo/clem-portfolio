@@ -121,26 +121,31 @@
 </section>
 
 <section id="contact">
-    <div class="card">
-        <h2>Contact</h2>
+  <div class="card">
+    <h2>Contact</h2>
 
-        <form id="contactForm">
-    		<label>Name:</label>
-    		<input type="text" placeholder="Your name" id="name">
+    <form action="https://formspree.io/f/xayrvaap" method="POST">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required />
+      </div>
 
-    		<label>Email:</label>
-    		<input type="email" placeholder="Your email" id="email">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+      </div>
 
-    		<label>Message:</label>
-    		<textarea rows="5" placeholder="Your message" id="message"></textarea>
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" required></textarea>
+      </div>
 
-    		<button type="submit">Send</button>
-	</form>
+      <input type="submit" value="Send" />
+    </form>
 
-        <p>Or email directly: clementinecash4@gmail.com</p>
-    </div>
+    <p>Or email directly: clementinecash4@gmail.com</p>
+  </div>
 </section>
-
 <footer>
     <p>© 2026 Clem (Clementine) Art</p>
 </footer>
