@@ -10,26 +10,28 @@ window.addEventListener('DOMContentLoaded', () => {
         galleryContainer.appendChild(img);
     });
 });
-ECHO is off.
 function openFullscreen(src) {
-    // Create overlay
+    const overlay = document.createElement('div');
     overlay.classList.add('overlay');
-ECHO is off.
     // Create fullscreen image
+    const bigImg = document.createElement('img');
     bigImg.src = src;
     bigImg.classList.add('overlay-img');
-ECHO is off.
     // Click on image → zoom toggle
     bigImg.addEventListener('click', (e) => {
         e.stopPropagation(); // Prevent closing
-        bigImg.classList.toggle('zoomed');
+        if (!zoomed) {
+            bigImg.style.transform = 'scale(1.5)';
+            zoomed = true;
+        } else {
+            bigImg.style.transform = 'scale(1)';
+            zoomed = false;
+        }
     });
-ECHO is off.
     // Click outside image → close overlay
     overlay.addEventListener('click', () => {
         overlay.remove();
     });
-ECHO is off.
     overlay.appendChild(bigImg);
     document.body.appendChild(overlay);
 }
