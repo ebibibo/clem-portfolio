@@ -16,8 +16,6 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 function openFullscreen(src) {
     let zoomed = false; // Track zoom state
-    let isDragging = false;
-    let startX, startY, imgX = 0, imgY = 0;
     const overlay = document.createElement('div');
     overlay.classList.add('overlay');
     // Create fullscreen image
@@ -36,28 +34,6 @@ function openFullscreen(src) {
             bigImg.style.top = '0px';
             imgX = imgY = 0;
             zoomed = false;
-        }
-    });
-    // Drag to pan when zoomed
-    bigImg.addEventListener('mousedown', (e) => {
-        if (!zoomed) return;
-        isDragging = true;
-        startX = e.clientX - imgX;
-        startY = e.clientY - imgY;
-        bigImg.style.cursor = 'grabbing';
-    });
-
-    window.addEventListener('mousemove', (e) => {
-        if (isDragging) {
-            imgX = e.clientX - startX;
-            imgY = e.clientY - startY;
-            bigImg.style.transform = `scale(1.5) translate(${imgX}px, ${imgY}px)`;
-        }
-    });
-    window.addEventListener('mouseup', () => {
-        if (isDragging) {
-            isDragging = false;
-            bigImg.style.cursor = 'grab';
         }
     });
     overlay.addEventListener('click', () => {
