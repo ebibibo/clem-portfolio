@@ -88,11 +88,10 @@ input, textarea {
 @media (max-width: 600px) {
     nav {
         padding: 5px;
+        font-size: 10px !important;
     }
         nav a {
             margin: 0 5px; /* Reduce spacing */
-            font-size: 10px !important; /* Slightly smaller text */
-            display: inline-block;
         }
     section {
         padding: 20px;
