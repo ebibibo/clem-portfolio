@@ -91,7 +91,7 @@ input, textarea {
     }
         nav a {
             margin: 0 5px; /* Reduce spacing */
-            font-size: 0px; /* Slightly smaller text */
+            font-size: 10px !important; /* Slightly smaller text */
             display: inline-block;
         }
     section {
