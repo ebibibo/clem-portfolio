@@ -87,7 +87,7 @@ input, textarea {
 /* Mobile adjustments */
 @media (max-width: 600px) {
     nav {
-        padding: 5px;
+        padding: 0px;
     }
     nav a {
         display: block; /* Stack vertically */
