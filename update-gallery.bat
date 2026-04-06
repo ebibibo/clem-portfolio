@@ -1,52 +1,46 @@
 @echo off
 setlocal enabledelayedexpansion
 
-REM ===========================
-REM 1. Variables
-REM ===========================
-set IMAGES_DIR=images
-set SCRIPT_FILE=script.js
-set COUNT=1
+REM --- Step 1: Set folders ---
+set "imagesFolder=images"
+set "scriptFile=script.js"
 
-REM ===========================
-REM 2. Delete old art files from script.js
-REM ===========================
-echo Removing old galleryImages array from %SCRIPT_FILE%...
-powershell -Command "(Get-Content %SCRIPT_FILE%) -replace 'const galleryImages = \[.*?\];', '' | Set-Content %SCRIPT_FILE%"
-
-REM ===========================
-REM 3. Rename images in images folder
-REM ===========================
-echo Renaming images in %IMAGES_DIR%...
-for %%f in (%IMAGES_DIR%\*) do (
-    set EXT=%%~xf
-    ren "%%f" "art!COUNT!!EXT!"
-    echo Renamed %%f to art!COUNT!!EXT!
-    set /a COUNT+=1
+REM --- Step 2: Delete old galleryImages array in script.js ---
+REM Keep everything before "const galleryImages = [" and after the closing "];"
+for /f "tokens=1* delims=]" %%a in ('findstr /n "const galleryImages" "%scriptFile%"') do set "lineNumber=%%a"
+if defined lineNumber (
+    REM Remove old galleryImages array lines
+    more +%lineNumber% "%scriptFile%" > temp.js
+    move /y temp.js "%scriptFile%"
 )
 
-REM ===========================
-REM 4. Rebuild galleryImages array in script.js
-REM ===========================
-echo Updating %SCRIPT_FILE% with new galleryImages array...
+REM --- Step 3: Rename images to art1.png, art2.png, ... ---
+set /a count=1
+for %%f in (%imagesFolder%\*) do (
+    set "ext=%%~xf"
+    ren "%%f" "art!count!!ext!"
+    set /a count+=1
+)
+
+REM --- Step 4: Update script.js with new galleryImages array ---
 (
     echo const galleryImages = [
-)
-for %%f in (%IMAGES_DIR%\*) do (
-    echo    "%%~nxf",
-)
-(
+    for /L %%i in (1,1,!count!-1) do (
+        if %%i lss !count!-1 (
+            echo     "art%%i.png",
+        ) else (
+            echo     "art%%i.png"
+        )
+    )
     echo ];
-) >> temp_array.txt
+) > galleryArray.js
 
-REM Append temp_array.txt to script.js
-type temp_array.txt >> %SCRIPT_FILE%
-del temp_array.txt
+REM Append gallery array to script.js
+type galleryArray.js >> "%scriptFile%"
+del galleryArray.js
 
-REM ===========================
-REM 5. Git add, commit, push
-REM ===========================
-git add .
+REM --- Step 5: Git add, commit, push ---
+git add "%scriptFile%" "%imagesFolder%"
 git commit -m "Update Gallery"
 git push
 

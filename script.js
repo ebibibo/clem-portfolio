@@ -1,23 +1,30 @@
 // script.js
 window.addEventListener('DOMContentLoaded', () => {
+    const galleryContainer = document.getElementById('gallery-container');
     galleryContainer.innerHTML = '';
+    galleryImages.forEach(filename => {
+        const img = document.createElement('img');
         img.src = './images/' + filename;
         img.alt = filename;
         img.classList.add('gallery-img');
+
+        // Click on image → open fullscreen
         img.addEventListener('click', () => {
             openFullscreen(img.src);
         });
+
         galleryContainer.appendChild(img);
     });
 });
 function openFullscreen(src) {
+    let zoomed = false; // Track zoom state
     const overlay = document.createElement('div');
     overlay.classList.add('overlay');
     // Create fullscreen image
     const bigImg = document.createElement('img');
     bigImg.src = src;
     bigImg.classList.add('overlay-img');
-    // Click on image → zoom toggle
+    // Click on image to toggle zoom
     bigImg.addEventListener('click', (e) => {
         e.stopPropagation(); // Prevent closing
         if (!zoomed) {
@@ -28,7 +35,6 @@ function openFullscreen(src) {
             zoomed = false;
         }
     });
-    // Click outside image → close overlay
     overlay.addEventListener('click', () => {
         overlay.remove();
     });
