@@ -1,14 +1,11 @@
 @echo off
-REM Regenerate gallery.json
-node generateGalleryJson.js
+REM Generate gallery array in script.js
+node generateGalleryArray.js
 
-REM Add gallery.json and commit
-git add gallery.json
+REM Add changes to git
+git add script.js
 git commit -m "Update gallery"
-
-REM Push to GitHub
 git push
 
-echo.
-echo Gallery updated and pushed successfully!
+echo Gallery updated, committed, and pushed successfully!
 pause
