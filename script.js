@@ -1,10 +1,11 @@
-const galleryImages = ["art1.png","art2.png"];
+const galleryImages = [
+    "art1.png",
+    "art2.png",
+];
+
 // script.js
 window.addEventListener('DOMContentLoaded', () => {
-    const galleryContainer = document.getElementById('gallery-container');
     galleryContainer.innerHTML = '';
-    galleryImages.forEach(filename => {
-        const img = document.createElement('img');
         img.src = './images/' + filename;
         img.alt = filename;
         img.classList.add('gallery-img');
@@ -13,12 +14,9 @@ window.addEventListener('DOMContentLoaded', () => {
         });
         galleryContainer.appendChild(img);
     });
-    console.log(`Loaded ${galleryImages.length} images into gallery.`);
 });
 function openFullscreen(src) {
-    const overlay = document.createElement('div');
     overlay.classList.add('overlay');
-    const bigImg = document.createElement('img');
     bigImg.src = src;
     bigImg.classList.add('overlay-img');
     let zoomed = false;
