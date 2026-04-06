@@ -1,4 +1,5 @@
 const galleryImages = ["art1.png","art2.png",];
+const galleryImages = ["art1.png","art2.png",];
 // script.js
 
 window.addEventListener('DOMContentLoaded', () => {
