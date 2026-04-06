@@ -1,48 +1,48 @@
 @echo off
 setlocal enabledelayedexpansion
 
-REM --- Step 1: Set folders ---
-set "imagesFolder=images"
-set "scriptFile=script.js"
+REM --- Step 1: Set variables ---
+set "IMAGES_FOLDER=images"
+set "SCRIPT_FILE=script.js"
 
-REM --- Step 2: Delete old galleryImages array in script.js ---
-REM Keep everything before "const galleryImages = [" and after the closing "];"
-for /f "tokens=1* delims=]" %%a in ('findstr /n "const galleryImages" "%scriptFile%"') do set "lineNumber=%%a"
-if defined lineNumber (
-    REM Remove old galleryImages array lines
-    more +%lineNumber% "%scriptFile%" > temp.js
-    move /y temp.js "%scriptFile%"
-)
-
-REM --- Step 3: Rename images to art1.png, art2.png, ... ---
-set /a count=1
-for %%f in (%imagesFolder%\*) do (
-    set "ext=%%~xf"
-    ren "%%f" "art!count!!ext!"
-    set /a count+=1
-)
-
-REM --- Step 4: Update script.js with new galleryImages array ---
+REM --- Step 2: Remove old galleryImages array ---
+REM Remove lines between "const galleryImages = [" and the next "];"
+set "inside=0"
 (
-    echo const galleryImages = [
-    for /L %%i in (1,1,!count!-1) do (
-        if %%i lss !count!-1 (
-            echo     "art%%i.png",
-        ) else (
-            echo     "art%%i.png"
-        )
-    )
-    echo ];
-) > galleryArray.js
+for /f "usebackq delims=" %%a in ("%SCRIPT_FILE%") do (
+    set "line=%%a"
+    if "!line!"=="const galleryImages = [" set inside=1
+    if !inside! EQU 0 echo %%a
+    if "!line!"=="];"
+        if !inside! EQU 1 set inside=0
+)
+) > temp_script.js
+move /y temp_script.js "%SCRIPT_FILE%"
 
-REM Append gallery array to script.js
-type galleryArray.js >> "%scriptFile%"
-del galleryArray.js
+REM --- Step 3: Rename images ---
+set /a COUNT=1
+for %%F in (%IMAGES_FOLDER%\*) do (
+    ren "%%F" "art!COUNT!.png"
+    set /a COUNT+=1
+)
+
+REM --- Step 4: Append new galleryImages array ---
+(
+echo const galleryImages = [
+for /L %%i in (1,1,!COUNT!-1) do (
+    if %%i LSS !COUNT!-1 (
+        echo     "art%%i.png",
+    ) else (
+        echo     "art%%i.png"
+    )
+)
+echo ];
+) >> "%SCRIPT_FILE%"
 
 REM --- Step 5: Git add, commit, push ---
-git add "%scriptFile%" "%imagesFolder%"
+git add "%SCRIPT_FILE%" "%IMAGES_FOLDER%"
 git commit -m "Update Gallery"
 git push
 
-echo Gallery updated, committed, and pushed.
+echo Gallery updated and pushed!
 pause
