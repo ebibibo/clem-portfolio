@@ -1,17 +1,30 @@
 const fs = require('fs');
-const path = 'images';
+const path = require('path');
+
+// Path to images folder
+const imagesFolder = path.join(__dirname, 'images');
+
+// Path to gallery.json
+const galleryJsonPath = path.join(__dirname, 'gallery.json');
 
 // Read all files in images folder
-fs.readdir(path, (err, files) => {
-    if (err) {
-        console.error('Error reading images folder:', err);
-        return;
-    }
+let imageFiles = [];
+try {
+    imageFiles = fs.readdirSync(imagesFolder)
+        .filter(file => {
+            const ext = path.extname(file).toLowerCase();
+            return ['.jpg', '.jpeg', '.png', '.gif'].includes(ext);
+        });
+} catch (err) {
+    console.error("Error reading images folder:", err);
+}
 
-    // Filter only image files
-    const images = files.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file));
+// Write gallery.json
+const galleryData = { images: imageFiles };
 
-    // Write gallery.json
-    fs.writeFileSync('gallery.json', JSON.stringify(images, null, 2));
-    console.log('gallery.json updated with', images.length, 'images!');
-});
+try {
+    fs.writeFileSync(galleryJsonPath, JSON.stringify(galleryData, null, 2));
+    console.log('gallery.json updated with', imageFiles.length, 'images.');
+} catch (err) {
+    console.error("Error writing gallery.json:", err);
+}
