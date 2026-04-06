@@ -6,7 +6,11 @@ const galleryImages = [
     "art1.png",
     "art2.png",
 ];
-
+ECHO is off.
+    "art1.png",
+    "art2.png",
+];
+ECHO is off.
 // script.js
 window.addEventListener('DOMContentLoaded', () => {
     galleryContainer.innerHTML = '';
@@ -19,26 +23,26 @@ window.addEventListener('DOMContentLoaded', () => {
         galleryContainer.appendChild(img);
     });
 });
-
+ECHO is off.
 function openFullscreen(src) {
     // Create overlay
     overlay.classList.add('overlay');
-
+ECHO is off.
     // Create fullscreen image
     bigImg.src = src;
     bigImg.classList.add('overlay-img');
-
+ECHO is off.
     // Click on image → zoom toggle
     bigImg.addEventListener('click', (e) => {
         e.stopPropagation(); // Prevent closing
         bigImg.classList.toggle('zoomed');
     });
-
+ECHO is off.
     // Click outside image → close overlay
     overlay.addEventListener('click', () => {
         overlay.remove();
     });
-
+ECHO is off.
     overlay.appendChild(bigImg);
     document.body.appendChild(overlay);
 }
