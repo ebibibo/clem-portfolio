@@ -2,91 +2,60 @@
 setlocal enabledelayedexpansion
 
 REM =========================
-REM CONFIG
-REM =========================
-set maxImages=20
-set maxSize=5242880   REM 5MB
-
-REM =========================
 REM STEP 1: RENAME IMAGES
 REM =========================
 cd images
-
 set count=1
 for %%f in (*.jpg *.jpeg *.png *.gif) do (
-    for %%I in ("%%f") do set size=%%~zI
-
-    if !size! LEQ %maxSize% (
-        if !count! LEQ %maxImages% (
-            set "ext=%%~xf"
-            ren "%%f" "art!count!!ext!"
-            set /a count+=1
-        ) else (
-            echo Skipping %%f (max images reached)
-        )
-    ) else (
-        echo Skipping %%f (too large)
-    )
+    set "ext=%%~xf"
+    ren "%%f" "art!count!!ext!" >nul 2>&1
+    set /a count+=1
 )
-
 cd ..
-
 echo Renamed !count!-1 images.
 
 REM =========================
-REM STEP 2: REMOVE OLD ARRAY
+REM STEP 2: REMOVE OLD ARRAY IN script.js
 REM =========================
-REM Delete lines starting with "const galleryImages" and up to the closing "];"
-(for /f "delims=" %%l in ('findstr /n "^" script.js') do (
+set "skip=0"
+(for /f "usebackq delims=" %%l in ("script.js") do (
     set "line=%%l"
-    REM Get line number
-    for /f "tokens=1* delims=:" %%a in ("%%l") do set "ln=%%a" & set "txt=%%b"
-    
-    REM Check if line contains "const galleryImages"
-    echo !txt! | findstr /c:"const galleryImages" >nul
-    if errorlevel 1 (
-        REM Not the start of array, print
-        echo !txt!>>script_clean.js
-    ) else (
-        REM Skip lines until we find "];"
-        set skip=1
-        :skiploop
-        set /p nextLine= <&0
-        echo !nextLine! | findstr /c:"];">nul
-        if not errorlevel 0 goto skiploop
-    )
-))
+    echo !line! | findstr /c:"const galleryImages" >nul
+    if !errorlevel! == 0 set skip=1
 
-move /y script_clean.js script.js
+    if !skip! == 0 echo !line!
+
+    echo !line! | findstr /c:"];" >nul
+    if !errorlevel! == 0 if !skip! == 1 set skip=0
+)) > script_clean.js
+move /y script_clean.js script.js >nul
 
 REM =========================
-REM STEP 3: WRITE NEW ARRAY
+REM STEP 3: CREATE NEW ARRAY AT TOP
 REM =========================
 (
-    echo const galleryImages = [
-    set i=1
-    for %%f in (images\art*) do (
-        if !i! LEQ %maxImages% (
-            echo     "%%~nxf",
-            set /a i+=1
-        )
-    )
-    echo ];
-    echo.
-    type script.js
-) > script_temp.js
-
-move /Y script_temp.js script.js
-
-echo script.js updated.
-
-REM =========================
-REM STEP 4: GIT PUSH
-REM =========================
-git add images script.js
-git commit -m "Update gallery"
-git push
-
+echo const galleryImages = [
+set i=0
+for %%f in (images\art*) do (
+    set /a i+=1
+    set "line=    "%%~nxf""
+    REM Add comma if not last image
+    if %%f neq (images\art%i%*) set "line=!line!,"
+    echo !line!
+)
+echo ];
 echo.
-echo Gallery updated, committed, and pushed successfully!
+type script.js
+) > script_temp.js
+move /y script_temp.js script.js >nul
+echo script.js updated with new galleryImages array.
+
+REM =========================
+REM STEP 4: COMMIT & PUSH
+REM =========================
+git add images script.js >nul
+git commit -m "Update gallery" >nul 2>&1
+git push >nul 2>&1
+
+echo Gallery updated, committed, and pushed!
 pause
