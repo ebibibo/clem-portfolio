@@ -47,4 +47,6 @@ const galleryImages = [
     "art2.png",
     "art3.png",
     "art4.png",
+    "art5.png",
+    "art6.png",
 ];
