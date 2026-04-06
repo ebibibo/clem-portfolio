@@ -34,10 +34,30 @@ cd ..
 echo Renamed !count!-1 images.
 
 REM =========================
-REM STEP 2: CLEAN OLD ARRAY
+REM STEP 2: REMOVE OLD ARRAY
 REM =========================
-findstr /v "const galleryImages" script.js > script_clean.js
-move /Y script_clean.js script.js
+REM Delete lines starting with "const galleryImages" and up to the closing "];"
+(for /f "delims=" %%l in ('findstr /n "^" script.js') do (
+    set "line=%%l"
+    REM Get line number
+    for /f "tokens=1* delims=:" %%a in ("%%l") do set "ln=%%a" & set "txt=%%b"
+    
+    REM Check if line contains "const galleryImages"
+    echo !txt! | findstr /c:"const galleryImages" >nul
+    if errorlevel 1 (
+        REM Not the start of array, print
+        echo !txt!>>script_clean.js
+    ) else (
+        REM Skip lines until we find "];"
+        set skip=1
+        :skiploop
+        set /p nextLine= <&0
+        echo !nextLine! | findstr /c:"];">nul
+        if not errorlevel 0 goto skiploop
+    )
+))
+
+move /y script_clean.js script.js
 
 REM =========================
 REM STEP 3: WRITE NEW ARRAY
