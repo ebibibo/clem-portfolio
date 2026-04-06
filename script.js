@@ -1,10 +1,4 @@
 // script.js
-
-const galleryImages = [
-    "art1.png",
-    "art2.png",
-    "art3.png"
-];
 window.addEventListener('DOMContentLoaded', () => {
     const galleryContainer = document.getElementById('gallery-container');
     galleryContainer.innerHTML = '';
@@ -13,12 +7,10 @@ window.addEventListener('DOMContentLoaded', () => {
         img.src = './images/' + filename;
         img.alt = filename;
         img.classList.add('gallery-img');
-
         // Click on image → open fullscreen
         img.addEventListener('click', () => {
             openFullscreen(img.src);
         });
-
         galleryContainer.appendChild(img);
     });
 });
@@ -33,7 +25,7 @@ function openFullscreen(src) {
     // Click on image to toggle zoom
     bigImg.addEventListener('click', (e) => {
         e.stopPropagation(); // Prevent closing
-        if (!zoomed) {
+        if (zoomed) {
             bigImg.style.transform = 'scale(1.5)';
             zoomed = true;
         } else {
@@ -47,4 +39,10 @@ function openFullscreen(src) {
     overlay.appendChild(bigImg);
     document.body.appendChild(overlay);
 }
+];
+const galleryImages = [
+    "art1.png",
+    "art2.png",
+    "art3.png",
+    "art4.png",
 ];
