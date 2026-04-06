@@ -1,59 +1,39 @@
 @echo off
-REM =============================
-REM Update Gallery Script
-REM =============================
-pause
+setlocal enabledelayedexpansion
 
 REM --- Variables ---
-set "IMAGES_FOLDER=images"
-set "SCRIPT_FILE=script.js"
-set COUNT=1
+set imagesFolder=images
+set scriptFile=script.js
+set counter=1
+set galleryArray=
 
-REM --- Step 1: Remove old galleryImages array ---
-echo Removing old galleryImages array from %SCRIPT_FILE%...
-setlocal enabledelayedexpansion
-(for /f "usebackq delims=" %%a in ("%SCRIPT_FILE%") do (
-    set "line=%%a"
-    if "!line!"=="const galleryImages = [" (
-        set inside=1
-    )
-    if not defined inside echo %%a
-    if "!line!"=="];" (
-        set inside=
-    )
-)) > temp_script.js
-move /y temp_script.js "%SCRIPT_FILE%"
-endlocal
-
-REM --- Step 2: Rename images ---
-echo Renaming images in %IMAGES_FOLDER%...
-for %%F in (%IMAGES_FOLDER%\*) do (
-    echo Renaming %%F to art%COUNT%.png
-    ren "%%F" "art%COUNT%.png"
-    set /a COUNT+=1
+REM --- Delete previous galleryImages array in script.js ---
+for /f "delims=" %%A in ('findstr /n "const galleryImages" "%scriptFile%"') do (
+    set lineNum=%%A
+    set lineNum=!lineNum::=!
+)
+if defined lineNum (
+    powershell -Command "(gc '%scriptFile%') | Where-Object {$_ -notmatch 'const galleryImages = \['} | Set-Content '%scriptFile%'"
 )
 
-REM --- Step 3: Append new galleryImages array ---
-echo Adding new galleryImages array to %SCRIPT_FILE%...
-(
-echo const galleryImages = [
-for /L %%i in (1,1,%COUNT%-1) do (
-    if %%i LSS %COUNT%-1 (
-        echo     "art%%i.png",
-    ) else (
-        echo     "art%%i.png"
-    )
+REM --- Rename images and build gallery array ---
+for %%F in (%imagesFolder%\*.*) do (
+    set ext=%%~xF
+    ren "%%F" art!counter!!ext!
+    set galleryArray=!galleryArray!"art!counter!!ext!", 
+    set /a counter+=1
 )
-echo ];
-) >> "%SCRIPT_FILE%"
 
-REM --- Step 4: Git add, commit, push ---
-echo Adding files to git...
-git add "%SCRIPT_FILE%" "%IMAGES_FOLDER%"
-echo Committing changes...
-git commit -m "Update Gallery"
-echo Pushing to origin...
+REM --- Remove trailing comma and space ---
+set galleryArray=[%galleryArray:~0,-2%]
+
+REM --- Append new galleryImages array to script.js ---
+echo const galleryImages = %galleryArray%; >> %scriptFile%
+
+REM --- Git operations ---
+git add .
+git commit -m "Update gallery"
 git push
 
-echo Done! Press any key to close.
+echo Gallery updated, committed, and pushed.
 pause
