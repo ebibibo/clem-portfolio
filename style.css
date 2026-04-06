@@ -87,10 +87,10 @@ input, textarea {
 /* Mobile adjustments */
 @media (max-width: 600px) {
     nav {
-        padding: 0px;
+        padding: 5px;
     }
     nav a {
-        margin: 5px 0; /* Reduce spacing */
+        margin: 0 5px; /* Reduce spacing */
         font-size: 15px; /* Slightly smaller text */
     }
     section {
