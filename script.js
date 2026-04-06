@@ -3,17 +3,6 @@ const galleryImages = [
     "art2.png",
 ];
 
-    "art1.png",
-    "art2.png",
-];
-ECHO is off.
-    "art1.png",
-    "art2.png",
-];
-ECHO is off.
-    "art1.png",
-    "art2.png",
-];
 ECHO is off.
 // script.js
 window.addEventListener('DOMContentLoaded', () => {
