@@ -89,10 +89,6 @@ input, textarea {
     section {
         padding: 20px;
     }
-    .gallery {
-        gap: 10px; /* Less gap between images */
-        padding: 5px;
-    }
 }
 
 /* Overlay fullscreen styles */
