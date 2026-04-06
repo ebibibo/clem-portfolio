@@ -1,4 +1,10 @@
 // script.js
+
+const galleryImages = [
+    "art1.png",
+    "art2.png",
+    "art3.png"
+];
 window.addEventListener('DOMContentLoaded', () => {
     const galleryContainer = document.getElementById('gallery-container');
     galleryContainer.innerHTML = '';
