@@ -119,3 +119,31 @@ input, textarea {
         transform: scale(1.5);
         cursor: zoom-out;
     }
+
+.arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 3rem;
+    padding: 0 15px;
+    cursor: pointer;
+    user-select: none;
+    z-index: 10000;
+}
+
+    .arrow.left {
+        left: 10px;
+    }
+
+    .arrow.right {
+        right: 10px;
+    }
+
+.overlay-img {
+    max-width: 90%;
+    max-height: 90%;
+    transition: transform 0.3s ease;
+    cursor: zoom-in;
+    border-radius: 5px;
+}

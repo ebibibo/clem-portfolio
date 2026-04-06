@@ -1,45 +1,92 @@
-// script.js
 window.addEventListener('DOMContentLoaded', () => {
     const galleryContainer = document.getElementById('gallery-container');
     galleryContainer.innerHTML = '';
-    galleryImages.forEach(filename => {
+
+    galleryImages.forEach((filename, index) => {
         const img = document.createElement('img');
         img.src = './images/' + filename;
         img.alt = filename;
         img.classList.add('gallery-img');
-        // Click on image → open fullscreen
+
         img.addEventListener('click', () => {
-            openFullscreen(img.src);
+            openFullscreen(index);
         });
+
         galleryContainer.appendChild(img);
     });
 });
-function openFullscreen(src) {
-    let zoomed = false; // Track zoom state
+
+function openFullscreen(startIndex) {
+    let currentIndex = startIndex;
+    let zoomed = false;
+
     const overlay = document.createElement('div');
     overlay.classList.add('overlay');
-    // Create fullscreen image
+
     const bigImg = document.createElement('img');
-    bigImg.src = src;
+    bigImg.src = './images/' + galleryImages[currentIndex];
     bigImg.classList.add('overlay-img');
-    // Click on image to toggle zoom
-    bigImg.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent closing
-        if (zoomed) {
-            bigImg.style.transform = 'scale(2)'; 
-            zoomed = true;
-        } else {
-            bigImg.style.transform = 'scale(1)';
-            bigImg.style.left = '0px';
-            bigImg.style.top = '0px';
-            imgX = imgY = 0;
-            zoomed = false;
-        }
-    });
-    overlay.addEventListener('click', () => {
-        overlay.remove();
-    });
     overlay.appendChild(bigImg);
+
+    // Left/Right arrows
+    const leftArrow = document.createElement('div');
+    leftArrow.classList.add('arrow', 'left');
+    leftArrow.innerHTML = '&#10094;'; // ◀
+    const rightArrow = document.createElement('div');
+    rightArrow.classList.add('arrow', 'right');
+    rightArrow.innerHTML = '&#10095;'; // ▶
+
+    overlay.appendChild(leftArrow);
+    overlay.appendChild(rightArrow);
+
     document.body.appendChild(overlay);
+
+    // Update image function
+    function showImage(index) {
+        bigImg.src = './images/' + galleryImages[index];
+    }
+
+    leftArrow.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+        showImage(currentIndex);
+    });
+
+    rightArrow.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentIndex = (currentIndex + 1) % galleryImages.length;
+        showImage(currentIndex);
+    });
+
+    // Keyboard navigation
+    function handleKey(e) {
+        if (e.key === 'ArrowLeft') {
+            currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+            showImage(currentIndex);
+        } else if (e.key === 'ArrowRight') {
+            currentIndex = (currentIndex + 1) % galleryImages.length;
+            showImage(currentIndex);
+        } else if (e.key === 'Escape') {
+            closeOverlay();
+        }
+    }
+    document.addEventListener('keydown', handleKey);
+
+    // Click on image → toggle zoom
+    bigImg.addEventListener('click', (e) => {
+        e.stopPropagation();
+        zoomed = !zoomed;
+        bigImg.style.transform = zoomed ? 'scale(1.5)' : 'scale(1)';
+    });
+
+    // Click outside image → close overlay
+    overlay.addEventListener('click', () => {
+        closeOverlay();
+    });
+
+    function closeOverlay() {
+        document.removeEventListener('keydown', handleKey);
+        overlay.remove();
+    }
 }
 const galleryImages = ["art1.png", "art2.png", "art3.png"]; 
