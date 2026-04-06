@@ -86,8 +86,20 @@ input, textarea {
 
 /* Mobile adjustments */
 @media (max-width: 600px) {
+    nav {
+        padding: 5px;
+    }
+    nav a {
+        display: block; /* Stack vertically */
+        margin: 5px 0; /* Reduce spacing */
+        font-size: 14px; /* Slightly smaller text */
+    }
     section {
         padding: 20px;
+    }
+    .gallery {
+        gap: 10px; /* Less gap between images */
+        padding: 5px;
     }
 }
 
