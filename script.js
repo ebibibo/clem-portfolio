@@ -35,3 +35,4 @@ function openFullscreen(src) {
     overlay.appendChild(bigImg);
     document.body.appendChild(overlay);
 }
+];
