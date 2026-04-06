@@ -1,11 +1,18 @@
 @echo off
-REM Generate gallery array in script.js
-node generateGalleryArray.js
+setlocal enabledelayedexpansion
 
-REM Add changes to git
-git add script.js
-git commit -m "Update gallery"
-git push
+REM Go to the images folder
+cd images
 
-echo Gallery updated, committed, and pushed successfully!
+REM Initialize counter
+set count=1
+
+REM Loop through all image files (jpg, jpeg, png, gif)
+for %%f in (*.jpg *.jpeg *.png *.gif) do (
+    set "ext=%%~xf"
+    ren "%%f" "art!count!!ext!"
+    set /a count+=1
+)
+
+echo Renamed !count!-1 images to art1, art2, ...
 pause
