@@ -1,3 +1,7 @@
+const galleryImages = [
+    "IMG_1333.png",
+    "okeh.png"
+];
 // script.js
 
 // Wait until the DOM is fully loaded
