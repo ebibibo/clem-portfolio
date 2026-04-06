@@ -89,10 +89,11 @@ input, textarea {
     nav {
         padding: 5px;
     }
-    nav a {
-        margin: 0 10px; /* Reduce spacing */
-        font-size: 15px; /* Slightly smaller text */
-    }
+        nav a {
+            margin: 0 5px; /* Reduce spacing */
+            font-size: 15px; /* Slightly smaller text */
+            display: inline-block;
+        }
     section {
         padding: 20px;
     }
