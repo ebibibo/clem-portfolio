@@ -42,4 +42,4 @@ function openFullscreen(src) {
     overlay.appendChild(bigImg);
     document.body.appendChild(overlay);
 }
-const galleryImages = ["art1.png", "art2.png", "art3.png", "art4.png", "art5.png"]; 
+const galleryImages = ["art1.png", "art2.png", "art3.png", "art4.png"]; 
