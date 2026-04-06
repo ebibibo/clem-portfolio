@@ -91,7 +91,7 @@ input, textarea {
         font-size: 20px !important;
     }
         nav a {
-            margin: 0 5px; /* Reduce spacing */
+            margin: 0 10px; /* Reduce spacing */
         }
     section {
         padding: 20px;
