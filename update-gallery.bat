@@ -1,16 +1,19 @@
 @echo off
 setlocal enabledelayedexpansion
 
-REM Configuration
+REM =========================
+REM CONFIG
+REM =========================
 set maxImages=20
-set maxSize=5242880   REM 5 MB in bytes
+set maxSize=5242880   REM 5MB
 
-REM Step 1: Rename images in the images folder
+REM =========================
+REM STEP 1: RENAME IMAGES
+REM =========================
 cd images
 
 set count=1
 for %%f in (*.jpg *.jpeg *.png *.gif) do (
-    REM Get file size in bytes
     for %%I in ("%%f") do set size=%%~zI
 
     if !size! LEQ %maxSize% (
@@ -19,55 +22,51 @@ for %%f in (*.jpg *.jpeg *.png *.gif) do (
             ren "%%f" "art!count!!ext!"
             set /a count+=1
         ) else (
-            echo Skipping %%f (limit of %maxImages% reached)
+            echo Skipping %%f (max images reached)
         )
     ) else (
-        echo Skipping %%f (too large: !size! bytes)
+        echo Skipping %%f (too large)
     )
 )
+
 cd ..
 
-REM Step 2: Replace galleryImages array in script.js
+echo Renamed !count!-1 images.
 
-set scriptFile=script.js
-set tempFile=script_temp.js
+REM =========================
+REM STEP 2: CLEAN OLD ARRAY
+REM =========================
+findstr /v "const galleryImages" script.js > script_clean.js
+move /Y script_clean.js script.js
 
-REM Read script.js line by line
-(for /f "usebackq delims=" %%L in ("%scriptFile%") do (
-    set "line=%%L"
-    REM Skip lines starting with const galleryImages
-    echo !line! | findstr /b /c:"const galleryImages" >nul
-    if errorlevel 1 (
-        echo !line!
-    )
-)) > "%tempFile%"
-
-REM Append the new galleryImages array at the top
-set arrayContent=const galleryImages = [
-set i=1
-for %%f in (images\art*) do (
-    if !i! LEQ %maxImages% (
-        set arrayContent=!arrayContent!"%%~nxf",
-        set /a i+=1
-    )
-)
-REM Remove trailing comma and close array
-set arrayContent=!arrayContent:~0,-1!];
-set arrayContent=!arrayContent!
-
-REM Combine new array + original script
+REM =========================
+REM STEP 3: WRITE NEW ARRAY
+REM =========================
 (
-    echo !arrayContent!
-    type "%tempFile%"
-) > "%scriptFile%"
+    echo const galleryImages = [
+    set i=1
+    for %%f in (images\art*) do (
+        if !i! LEQ %maxImages% (
+            echo     "%%~nxf",
+            set /a i+=1
+        )
+    )
+    echo ];
+    echo.
+    type script.js
+) > script_temp.js
 
-del "%tempFile%"
-echo script.js updated with new galleryImages array.
+move /Y script_temp.js script.js
 
-REM Step 3: Git add, commit, push
+echo script.js updated.
+
+REM =========================
+REM STEP 4: GIT PUSH
+REM =========================
 git add images script.js
 git commit -m "Update gallery"
 git push
 
+echo.
 echo Gallery updated, committed, and pushed successfully!
 pause
