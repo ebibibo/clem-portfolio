@@ -25,7 +25,7 @@ function openFullscreen(src) {
     // Click on image to toggle zoom
     bigImg.addEventListener('click', (e) => {
         e.stopPropagation(); // Prevent closing
-        if (zoomed) {
+        if (!zoomed) {
             bigImg.style.transform = 'scale(1.5)';
             zoomed = true;
         } else {

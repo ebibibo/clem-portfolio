@@ -91,27 +91,27 @@ input, textarea {
     }
 }
 
-/* Fullscreen overlay */
+/* Overlay fullscreen styles */
 .overlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.85);
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.9);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
-    cursor: pointer;
+    cursor: zoom-out; /* indicates click will close/zoom */
 }
 
 .overlay-img {
     max-width: 90%;
     max-height: 90%;
-    border-radius: 10px;
     transition: transform 0.3s ease;
-    cursor: zoom-in;
+    cursor: zoom-in; /* click to zoom in */
+    border-radius: 5px;
 }
 
     /* When zoomed */
