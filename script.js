@@ -1,11 +1,14 @@
-﻿const galleryImages = [
+const galleryImages = [
+    "art1.png",
+    "art2.png",
+];
+
     "art1.png",
     "art2.png",
 ];
 
 // script.js
 window.addEventListener('DOMContentLoaded', () => {
-    const galleryContainer = document.getElementById('gallery-container');
     galleryContainer.innerHTML = '';
         img.src = './images/' + filename;
         img.alt = filename;
@@ -19,11 +22,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function openFullscreen(src) {
     // Create overlay
-    const overlay = document.createElement('div');
     overlay.classList.add('overlay');
 
     // Create fullscreen image
-    const bigImg = document.createElement('img');
     bigImg.src = src;
     bigImg.classList.add('overlay-img');
 
