@@ -90,9 +90,8 @@ input, textarea {
         padding: 0px;
     }
     nav a {
-        display: block; /* Stack vertically */
         margin: 5px 0; /* Reduce spacing */
-        font-size: 14px; /* Slightly smaller text */
+        font-size: 15px; /* Slightly smaller text */
     }
     section {
         padding: 20px;
