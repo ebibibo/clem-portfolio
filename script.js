@@ -89,4 +89,4 @@ function openFullscreen(startIndex) {
         overlay.remove();
     }
 }
-const galleryImages = ["art1.png", "art2.png", "art3.png", "art4.png"]; 
+const galleryImages = ["art1.png", "art2.png", "art3.png"]; 
